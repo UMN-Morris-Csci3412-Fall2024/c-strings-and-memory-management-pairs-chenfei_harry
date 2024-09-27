@@ -4,13 +4,27 @@
 #include "disemvowel.h"
 
 int main(int argc, char *argv[]) {
-  char *line;
-  size_t size;
-  
-  size = 100;
-  line = (char*) malloc (size + 1);
+    char *line = NULL;
+    size_t size = 100;
 
-  while (getline(&line, &size, stdin) > 0) {
-    printf("%s\n", disemvowel(line));
-  }
+    // Allocate initial memory for the line
+    line = (char*) malloc(size + 1);
+
+    if (line == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        return 1;
+    }
+
+    // Read each line from stdin and process it
+    while (getline(&line, &size, stdin) > 0) {
+        char *disemvoweled = disemvowel(line);
+        if (disemvoweled != NULL) {
+            printf("%s\n", disemvoweled);
+            free(disemvoweled); // Free the disemvoweled string after printing
+        }
+    }
+
+    free(line); // Free the original line buffer
+    return 0;
 }
+
